@@ -115,7 +115,7 @@ export default class Recorder {
      */
     startRecord(): Promise<{}> {
         //clean up previous recordings
-        this.clearRecordStatus();
+        this.initRecorder();
 
         return new Promise((resolve, reject) => {
             try {
@@ -254,7 +254,6 @@ export default class Recorder {
     private initRecorder(): void {
         // 清空数据
         this.clearRecordStatus();
-
         this.context = new (window.AudioContext || window.webkitAudioContext)();
 
         this.analyser = this.context.createAnalyser(); // 录音分析节点
