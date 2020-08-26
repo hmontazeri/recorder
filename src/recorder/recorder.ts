@@ -242,6 +242,10 @@ export default class Recorder {
             offset += this.rBuffer[i].length;
         }
 
+        // clear left and right buffer after getting data
+        this.lBuffer = []
+        this.rBuffer = []
+
         return {
             left: lData,
             right: rData,
