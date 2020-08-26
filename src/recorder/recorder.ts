@@ -58,9 +58,9 @@ export default class Recorder {
      */
     constructor(options: recorderConfig = {}) {
         // 临时audioContext，为了获取输入采样率的
-        let context = new (window.AudioContext || window.webkitAudioContext)();
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
 
-        this.inputSampleRate = context.sampleRate; // 获取当前输入的采样率
+        this.inputSampleRate = this.context.sampleRate; // 获取当前输入的采样率
 
         // 设置输出配置
         this.setNewOption(options);
@@ -114,10 +114,8 @@ export default class Recorder {
      * @memberof Recorder
      */
     startRecord(): Promise<{}> {
-        if (this.context) {
-            // 关闭先前的录音实例，因为前次的实例会缓存少量前次的录音数据
-            this.destroyRecord();
-        }
+        //clean up previous recordings
+        this.clearRecordStatus();
 
         return new Promise((resolve, reject) => {
             try {
@@ -125,7 +123,7 @@ export default class Recorder {
                 // stream是通过navigator.getUserMedia获取的外部（如麦克风）stream音频输出，对于这就是输入
                 this.stream = this.config.stream;
                 this.audioInput = this.context.createMediaStreamSource(
-                    this.config.stream
+                    this.stream
                 );
                 // audioInput 为声音源，连接到处理节点 recorder
                 this.audioInput.connect(this.analyser);
@@ -164,7 +162,6 @@ export default class Recorder {
      */
     stopRecord(): void {
         this.audioInput && this.audioInput.disconnect();
-        this.source && this.source.stop();
         this.recorder.disconnect();
         this.analyser.disconnect();
     }

@@ -1,6 +1,6 @@
 {
     "name": "js-stream-recorder",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "js stream recorder",
     "main": "./index.js",
     "scripts": {
